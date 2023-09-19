@@ -64,9 +64,10 @@ public class MainActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveToDo();
 
-                Toast.makeText(getApplicationContext(), "할 일이 추가되었습니다.", Toast.LENGTH_LONG).show();
+                if (saveToDo()) {
+                    Toast.makeText(getApplicationContext(), "할 일이 저장되었습니다.", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -74,10 +75,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void saveToDo() {
+    private boolean saveToDo() {
         inputToDo = findViewById(R.id.inputToDo);
-
         String todo = inputToDo.getText().toString();
+
+        if  (todo.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "할 일을 입력해주세요.", Toast.LENGTH_LONG).show();
+            return false;
+        }
 
         String sqlSave = "insert into " + NoteDataBase.TABLE_NOTE + " values(null, '" + todo + "');";
 
@@ -85,5 +90,7 @@ public class MainActivity extends AppCompatActivity {
         database.execSQL(sqlSave);
 
         inputToDo.setText("");
+
+        return true;
     }
 }
